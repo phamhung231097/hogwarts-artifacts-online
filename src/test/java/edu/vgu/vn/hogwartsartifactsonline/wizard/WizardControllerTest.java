@@ -24,6 +24,8 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -176,6 +178,42 @@ class WizardControllerTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
                 .andExpect(jsonPath("$.message").value("Delete Success"));
 
+    }
+    @Test
+    void testAssignArtifactSuccess() throws Exception {
+        //given
+        doNothing().when(this.wizardService).assignArtifactToWizard(2,"1250808601744904191");
+        //when and then
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl+"/wizards/2/artifacts/1250808601744904191")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value("true"))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message").value("Artifact Assignment Success"));
+    }
+    @Test
+    void testAssignArtifactNonExistenceWizardId() throws Exception {
+        //given
+        doThrow(new ObjectNotFoundException("Wizard",5)).when(this.wizardService).assignArtifactToWizard(5,"1250808601744904191");
+        //when and then
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl+"/wizards/5/artifacts/1250808601744904191")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find Wizard with Id 5"));
+    }
+    @Test
+    void testAssignArtifactNonExistenceArtifactId() throws Exception {
+        //given
+        doThrow(new ObjectNotFoundException("Artifact","1250808601744904199")).when(this.wizardService).assignArtifactToWizard(2,"1250808601744904199");
+        //when and then
+        //then
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl+"/wizards/2/artifacts/1250808601744904199")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message").value("Could not find Artifact with Id 1250808601744904199"));
     }
 
 }

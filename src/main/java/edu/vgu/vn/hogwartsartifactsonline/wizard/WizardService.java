@@ -67,7 +67,7 @@ public class WizardService {
         wizardReposistory.delete(foundWizard);
         return foundWizard;
     }
-    public void assignArtifactToWizard(String artifactId,Integer wizardId )
+    public void assignArtifactToWizard(Integer wizardId, String artifactId)
     {
         Artifact associatedArtifact = artifactRepository.findById(artifactId).orElseThrow(
                 ()->{ return new ObjectNotFoundException("Artifact",artifactId);}
@@ -77,13 +77,18 @@ public class WizardService {
                     return new ObjectNotFoundException("Wizard",wizardId);
                 }
         );
-        if(associatedArtifact.getOwner() != null)
+//        if(associatedArtifact.getOwner() != null)
+//        {
+//            throw new ArtifactAlreadyAssignedException(associatedArtifact.getOwner().getName());
+//        }
+        //find Artifact assignment
+        //we need to see if artifact already assigned to any owner or not
+        if(associatedArtifact.getOwner() !=null)
         {
-            throw new ArtifactAlreadyAssignedException(associatedArtifact.getOwner().getName());
+            associatedArtifact.getOwner().removeArtifact(associatedArtifact);
         }
-        associatedWizard.getArtifacts().add(associatedArtifact);
-        associatedArtifact.setOwner(associatedWizard);
-        artifactRepository.save(associatedArtifact);
-        wizardReposistory.save(associatedWizard);
+        associatedWizard.addArtifact(associatedArtifact);
+//        artifactRepository.save(associatedArtifact);
+//        wizardReposistory.save(associatedWizard);
     }
 }

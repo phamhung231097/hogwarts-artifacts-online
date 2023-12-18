@@ -1,5 +1,7 @@
 package edu.vgu.vn.hogwartsartifactsonline.wizard;
 
+import edu.vgu.vn.hogwartsartifactsonline.artifact.Artifact;
+import edu.vgu.vn.hogwartsartifactsonline.artifact.ArtifactRepository;
 import edu.vgu.vn.hogwartsartifactsonline.exception.ObjectNotFoundException;
 import edu.vgu.vn.hogwartsartifactsonline.exception.WizardNameCannotBeNullException;
 import edu.vgu.vn.hogwartsartifactsonline.wizard.utils.WizardIdWorker;
@@ -26,7 +28,7 @@ class WizardServiceTest {
     @Mock
     WizardReposistory wizardReposistory;
     @Mock
-    WizardIdWorker wizardIdWorker;
+    ArtifactRepository artifactRepository;
     @InjectMocks
     WizardService wizardService;
     List<Wizard> wizardList = new ArrayList<>();
@@ -176,5 +178,83 @@ class WizardServiceTest {
         {
             wizardService.deleteWizard(4);
         });
+    }
+    @Test
+    void testAssignArtifactSuccess()
+    {
+        //given
+
+        Artifact a = new Artifact();
+        a.setId("1250808601744904192");
+        a.setName("Invisibility Cloak");
+        a.setDescription("An invisibility cloak is used to make the wearer invisible.");
+        a.setImageUrl("ImageUrl");
+
+        Wizard w2 = new Wizard();
+        w2.setId(2);
+        w2.setName("Harry Portbeo");
+        w2.addArtifact(a);
+
+        Wizard w3 = new Wizard();
+        w3.setId(3);
+        w3.setName("Nevile Shortbottom");
+        given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a));
+        given(wizardReposistory.findById(3)).willReturn(Optional.of(w3));
+        //when
+        wizardService.assignArtifactToWizard(3,"1250808601744904192");
+        assertThat(a.getOwner().getId()).isEqualTo(3);
+        assertThat(w3.getArtifacts()).contains(a);
+
+
+        //then
+    }
+    @Test
+    void testAssignArtifactErrorWithNonExistenceWizardId()
+    {
+        //given
+
+        Artifact a = new Artifact();
+        a.setId("1250808601744904192");
+        a.setName("Invisibility Cloak");
+        a.setDescription("An invisibility cloak is used to make the wearer invisible.");
+        a.setImageUrl("ImageUrl");
+
+        Wizard w2 = new Wizard();
+        w2.setId(2);
+        w2.setName("Harry Portbeo");
+        w2.addArtifact(a);
+
+        given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a));
+        given(wizardReposistory.findById(3)).willThrow(ObjectNotFoundException.class);
+
+        //when
+        assertThrows(ObjectNotFoundException.class,()->{
+            wizardService.assignArtifactToWizard(3,"1250808601744904192");
+        });
+
+    }
+    @Test
+    void testAssignArtifactErrorWithNonExistenceArtifactId()
+    {
+        //given
+
+        Artifact a = new Artifact();
+        a.setId("1250808601744904192");
+        a.setName("Invisibility Cloak");
+        a.setDescription("An invisibility cloak is used to make the wearer invisible.");
+        a.setImageUrl("ImageUrl");
+
+        Wizard w2 = new Wizard();
+        w2.setId(2);
+        w2.setName("Harry Portbeo");
+        w2.addArtifact(a);
+
+        given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
+
+        //when
+        assertThrows(ObjectNotFoundException.class,()->{
+            wizardService.assignArtifactToWizard(3,"1250808601744904192");
+        });
+
     }
 }
