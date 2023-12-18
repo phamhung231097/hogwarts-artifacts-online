@@ -2,7 +2,9 @@ package edu.vgu.vn.hogwartsartifactsonline.wizard;
 
 import edu.vgu.vn.hogwartsartifactsonline.artifact.Artifact;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
+import javax.annotation.processing.Generated;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +12,9 @@ import java.util.List;
 @Entity
 public class Wizard implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
+
     private String name;
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},mappedBy = "owner")
     private List<Artifact> artifacts = new ArrayList<>();
@@ -48,5 +51,12 @@ public class Wizard implements Serializable {
     }
     public int getNumberOfArtifacts(){
         return artifacts.size();
+    }
+    public void deleteAssociatedArtifacts()
+    {
+        artifacts.stream().forEach(artifact -> {
+            artifact.setOwner(null);
+        });
+        artifacts = null;
     }
 }

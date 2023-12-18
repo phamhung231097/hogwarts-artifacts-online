@@ -1,4 +1,4 @@
-package edu.vgu.vn.hogwartsartifactsonline.system.exception;
+package edu.vgu.vn.hogwartsartifactsonline.exception;
 
 import edu.vgu.vn.hogwartsartifactsonline.artifact.Artifact;
 import edu.vgu.vn.hogwartsartifactsonline.artifact.ArtifactRepository;
