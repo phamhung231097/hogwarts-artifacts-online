@@ -1,6 +1,7 @@
 package edu.vgu.vn.hogwartsartifactsonline.artifact;
 
 import edu.vgu.vn.hogwartsartifactsonline.artifact.utils.IdWorker;
+import edu.vgu.vn.hogwartsartifactsonline.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class ArtifactService {
     public Artifact findById(String artifactId)
     {
         return artifactRepository.findById(artifactId)
-                .orElseThrow(()->new ArtifactNotFoundException(artifactId));
+                .orElseThrow(()->new ObjectNotFoundException("Artifact",artifactId));
     }
     public List<Artifact> findAll()
     {
@@ -43,7 +44,7 @@ public class ArtifactService {
                     oldArtifact.setOwner(updateArtifact.getOwner());
                     return artifactRepository.save(oldArtifact);
                 })
-                .orElseThrow(()->new ArtifactNotFoundException(artifactId));
+                .orElseThrow(()->new ObjectNotFoundException("Artifact",artifactId));
 
     }
     public  Artifact deleteArtifact(String artifactId)
@@ -53,6 +54,6 @@ public class ArtifactService {
                     artifactRepository.delete(deleteArtifact);
                     return deleteArtifact ;
                 })
-                .orElseThrow(()->new ArtifactNotFoundException(artifactId));
+                .orElseThrow(()->new ObjectNotFoundException("Artifact",artifactId));
     }
 }

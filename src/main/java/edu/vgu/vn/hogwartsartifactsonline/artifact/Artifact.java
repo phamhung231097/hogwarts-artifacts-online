@@ -2,7 +2,6 @@ package edu.vgu.vn.hogwartsartifactsonline.artifact;
 
 import edu.vgu.vn.hogwartsartifactsonline.wizard.Wizard;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
