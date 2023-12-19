@@ -1,5 +1,7 @@
 package edu.vgu.vn.hogwartsartifactsonline.exception;
 
+import edu.vgu.vn.hogwartsartifactsonline.HogwartsUser.HogwartsUser;
+import edu.vgu.vn.hogwartsartifactsonline.HogwartsUser.HogwartsUserRepository;
 import edu.vgu.vn.hogwartsartifactsonline.artifact.Artifact;
 import edu.vgu.vn.hogwartsartifactsonline.artifact.ArtifactRepository;
 import edu.vgu.vn.hogwartsartifactsonline.wizard.Wizard;
@@ -12,10 +14,14 @@ public class DbDataInitializer implements CommandLineRunner {
 
     private final ArtifactRepository artifactRepository;
     private final WizardReposistory wizardReposistory;
+    private final HogwartsUserRepository hogwartsUserRepository;
 
-    public DbDataInitializer(ArtifactRepository artifactRepository, WizardReposistory wizardReposistory) {
+    public DbDataInitializer(ArtifactRepository artifactRepository,
+                             WizardReposistory wizardReposistory,
+                             HogwartsUserRepository hogwartsUserRepository) {
         this.artifactRepository = artifactRepository;
         this.wizardReposistory = wizardReposistory;
+        this.hogwartsUserRepository = hogwartsUserRepository;
     }
 
     @Override
@@ -86,11 +92,35 @@ public class DbDataInitializer implements CommandLineRunner {
         w3.setId(3);
         w3.addArtifact(a5);
 
+        HogwartsUser user1 = new HogwartsUser();
+        user1.setUsername("niggauser1");
+        user1.setPassword("password");
+        user1.setEnable(true);
+        user1.setRoles("admin");
+
+        HogwartsUser user2 = new HogwartsUser();
+        user2.setUsername("niggauser2");
+        user2.setPassword("password");
+        user2.setEnable(true);
+        user2.setRoles("admin user");
+
+        HogwartsUser user3 = new HogwartsUser();
+        user3.setUsername("niggauser3");
+        user3.setPassword("password");
+        user3.setEnable(false);
+        user3.setRoles("admin user");
+
 
         wizardReposistory.save(w1);
         wizardReposistory.save(w2);
         wizardReposistory.save(w3);
 
         artifactRepository.save(a6);
+
+        hogwartsUserRepository.save(user1);
+        hogwartsUserRepository.save(user2);
+        hogwartsUserRepository.save(user3);
+
+
     }
 }

@@ -21,5 +21,4 @@ public class HogwartsArtifactsOnlineApplication {
     @Bean
     public WizardIdWorker wizardIdWorker(){return new WizardIdWorker();}
 
-
 }

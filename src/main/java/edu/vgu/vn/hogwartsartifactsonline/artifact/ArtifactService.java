@@ -42,7 +42,7 @@ public class ArtifactService {
                     oldArtifact.setDescription(updateArtifact.getDescription());
                     oldArtifact.setImageUrl(updateArtifact.getImageUrl());
                     oldArtifact.setOwner(updateArtifact.getOwner());
-                    return artifactRepository.save(oldArtifact);
+                    return oldArtifact;
                 })
                 .orElseThrow(()->new ObjectNotFoundException("Artifact",artifactId));
 
